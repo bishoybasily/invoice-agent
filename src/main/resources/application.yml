@@ -3,8 +3,8 @@ spring:
     name: invoice-agent
   datasource:
     url: jdbc:mariadb://localhost:3306/invoices
-    username: invoices
-    password: invoices
+    username: root
+    password: toor
   jpa:
     hibernate:
       ddl-auto: update
