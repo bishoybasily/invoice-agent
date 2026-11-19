@@ -1,0 +1,17 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: invoice_agent
+      MARIADB_ROOT_USER: root
+      MARIADB_ROOT_PASSWORD: toor
+    ports:
+      - "3306:3306"
+    networks:
+      - invoice_agent
+
+
+networks:
+  invoice_agent:
+    name: invoice_agent
+    driver: bridge
