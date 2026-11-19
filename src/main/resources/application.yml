@@ -2,7 +2,7 @@ spring:
   application:
     name: invoice-agent
   datasource:
-    url: jdbc:mariadb://localhost:3306/invoices
+    url: jdbc:mariadb://localhost:3306/invoice_agent
     username: root
     password: toor
   jpa:
