@@ -24,24 +24,24 @@ spring:
       client:
         enabled: false
     anthropic:
-      api-key: ${ANTHROPIC_API_KEY:}
+#      api-key: ${ANTHROPIC_API_KEY:}
       chat:
         options:
           model: claude-opus-5-5
           max-tokens: 16000
     google:
       genai:
-        api-key: ${GOOGLE_API_KEY:}
-        project-id: ${GOOGLE_CLOUD_PROJECT:}
+#        api-key: ${GOOGLE_API_KEY:}
+        project-id: ${GOOGLE_CLOUD_PROJECT:bishoybasily}
         location: ${GOOGLE_CLOUD_LOCATION:global}
         chat:
           options:
-            model: ${GEMINI_MODEL:gemini-2.5-flash}
+            model: ${GEMINI_MODEL:gemini-3.8-flash}
             max-output-tokens: 16000
             temperature: 0.0
             response-mime-type: application/json
 
 ops:
-  extractor: ${OPS_EXTRACTOR:replay}
-  samples-dir: samples
+  extractor: ${OPS_EXTRACTOR:GEMINI}
+  samples-dir: ${OPS_SAMPLES_DIR:../invoice-agent-samples}
   min-confidence: 0.85

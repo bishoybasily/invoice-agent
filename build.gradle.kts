@@ -50,4 +50,6 @@ dependencyManagement {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    val samplesDir = providers.environmentVariable("OPS_SAMPLES_DIR").orElse("../invoice-agent-samples")
+    systemProperty("ops.samples-dir", file(samplesDir.get()).absolutePath)
 }

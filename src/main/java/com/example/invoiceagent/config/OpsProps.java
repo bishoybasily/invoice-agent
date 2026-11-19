@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class OpsProps {
 
     private Extractor extractor = Extractor.REPLAY;
-    private String samplesDir = "samples";
+    private String samplesDir = "../invoice-agent-samples";
     private double minConfidence = 0.85;
 
     public enum Extractor { CLAUDE, GEMINI, REPLAY }

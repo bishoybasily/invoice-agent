@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +26,7 @@ class InvoiceValidatorTest {
 
     @TestFactory
     List<DynamicTest> rulesMatchGroundTruth() throws Exception {
-        JsonNode all = new ObjectMapper().readTree(Files.readString(Path.of("samples/ground_truth.json")));
+        JsonNode all = new ObjectMapper().readTree(Files.readString(Samples.file("ground_truth.json")));
         List<DynamicTest> tests = new ArrayList<>();
         for (JsonNode sample : all) {
             tests.add(DynamicTest.dynamicTest(sample.path("file").asText(), () -> {
@@ -44,7 +43,7 @@ class InvoiceValidatorTest {
 
     @Test
     void zeroVatWithoutReverseChargeNoteIsAnError() throws Exception {
-        JsonNode all = new ObjectMapper().readTree(Files.readString(Path.of("samples/ground_truth.json")));
+        JsonNode all = new ObjectMapper().readTree(Files.readString(Samples.file("ground_truth.json")));
         ExtractedInvoice rc = GroundTruthReplayExtractor.fromGroundTruth(all.get(2));
         ExtractedInvoice noNote = new ExtractedInvoice(rc.seller(), rc.buyer(), rc.invoiceNumber(), rc.invoiceDate(),
                 rc.dueDate(), rc.orderReference(), rc.buyerReference(), rc.currency(), rc.lines(), rc.vatBreakdown(),
@@ -54,7 +53,7 @@ class InvoiceValidatorTest {
 
     @Test
     void lineArithmeticIsChecked() throws Exception {
-        JsonNode all = new ObjectMapper().readTree(Files.readString(Path.of("samples/ground_truth.json")));
+        JsonNode all = new ObjectMapper().readTree(Files.readString(Samples.file("ground_truth.json")));
         ExtractedInvoice inv = GroundTruthReplayExtractor.fromGroundTruth(all.get(0));
         var lines = new ArrayList<>(inv.lines());
         var first = lines.get(0);
@@ -67,7 +66,7 @@ class InvoiceValidatorTest {
 
     @Test
     void lowConfidenceNeedsReviewButIsNoError() throws Exception {
-        JsonNode all = new ObjectMapper().readTree(Files.readString(Path.of("samples/ground_truth.json")));
+        JsonNode all = new ObjectMapper().readTree(Files.readString(Samples.file("ground_truth.json")));
         ExtractedInvoice inv = GroundTruthReplayExtractor.fromGroundTruth(all.get(0));
         ExtractedInvoice unsure = new ExtractedInvoice(inv.seller(), inv.buyer(), inv.invoiceNumber(), inv.invoiceDate(),
                 inv.dueDate(), inv.orderReference(), inv.buyerReference(), inv.currency(), inv.lines(), inv.vatBreakdown(),

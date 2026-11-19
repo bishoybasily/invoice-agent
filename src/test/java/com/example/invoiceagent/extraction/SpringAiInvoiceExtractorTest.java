@@ -1,5 +1,6 @@
 package com.example.invoiceagent.extraction;
 
+import com.example.invoiceagent.Samples;
 import com.example.invoiceagent.model.dto.ExtractedInvoice;
 import com.example.invoiceagent.ops.extraction.SpringAiInvoiceExtractor;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -45,7 +45,7 @@ class SpringAiInvoiceExtractorTest {
             }
         };
 
-        byte[] pdf = Files.readAllBytes(Path.of("samples/01_clean_de_single_vat.pdf"));
+        byte[] pdf = Files.readAllBytes(Samples.file("01_clean_de_single_vat.pdf"));
         ExtractedInvoice inv = new SpringAiInvoiceExtractor("Fake", fake).extract("01.pdf", pdf);
 
         assertThat(inv.invoiceNumber()).isEqualTo("RE-2026-1001");

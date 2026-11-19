@@ -13,7 +13,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ class PipelineTest {
         expected.put("06_scanned_copy_of_01.pdf", Status.NEEDS_REVIEW);
 
         for (var e : expected.entrySet()) {
-            InvoiceDocument doc = service.process(e.getKey(), Files.readAllBytes(Path.of("samples", e.getKey())));
+            InvoiceDocument doc = service.process(e.getKey(), Files.readAllBytes(Samples.file(e.getKey())));
             assertThat(doc.getStatus()).as(e.getKey()).isEqualTo(e.getValue());
             if (doc.getStatus() == Status.VALID) {
                 Document xml = DocumentBuilderFactory.newDefaultNSInstance().newDocumentBuilder()
@@ -51,7 +50,7 @@ class PipelineTest {
     @Test
     void approvingAReviewItemProducesXRechnung() throws Exception {
         InvoiceDocument doc = service.process("06_scanned_copy_of_01.pdf",
-                Files.readAllBytes(Path.of("samples/06_scanned_copy_of_01.pdf")));
+                Files.readAllBytes(Samples.file("06_scanned_copy_of_01.pdf")));
         assertThat(doc.getXrechnungXml()).isNull();
         InvoiceDocument approved = service.approve(doc.getId());
         assertThat(approved.getStatus()).isEqualTo(Status.APPROVED);
@@ -61,7 +60,7 @@ class PipelineTest {
     @Test
     void invoiceWithRuleErrorCannotBeApproved() throws Exception {
         InvoiceDocument doc = service.process("04_error_wrong_total.pdf",
-                Files.readAllBytes(Path.of("samples/04_error_wrong_total.pdf")));
+                Files.readAllBytes(Samples.file("04_error_wrong_total.pdf")));
         assertThatThrownBy(() -> service.approve(doc.getId())).isInstanceOf(IllegalStateException.class);
         assertThat(service.get(doc.getId()).getStatus()).isEqualTo(Status.NEEDS_REVIEW);
     }

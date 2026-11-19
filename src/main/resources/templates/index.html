@@ -25,7 +25,7 @@
         <tr><th>#</th><th>File</th><th>Seller</th><th>Invoice no.</th><th class="num">Total</th><th>Status</th><th>Read by</th><th class="num">ms</th></tr>
         </thead>
         <tbody>
-        <tr th:if="${#lists.isEmpty(invoices)}"><td colspan="8" class="muted">Nothing yet. Upload a PDF, e.g. the ones in samples/.</td></tr>
+        <tr th:if="${#lists.isEmpty(invoices)}"><td colspan="8" class="muted">Nothing yet. Upload a PDF.</td></tr>
         <tr th:each="d : ${invoices}">
             <td th:text="${d.id}">1</td>
             <td><a th:href="@{/invoices/{id}(id=${d.id})}" th:text="${d.fileName}">file.pdf</a></td>
