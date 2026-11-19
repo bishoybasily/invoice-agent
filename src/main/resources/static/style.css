@@ -1,0 +1,32 @@
+:root { --bg:#f6f7f9; --card:#fff; --text:#1c2430; --muted:#5b6675; --line:#e2e6eb;
+        --ok:#1f7a4d; --ok-bg:#e3f4ea; --warn:#8a5a00; --warn-bg:#fff3d6; --err:#b42318; --err-bg:#fde8e6; --accent:#2457c5; }
+* { box-sizing:border-box; }
+body { margin:0; font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--text); }
+main { max-width:1100px; margin:0 auto; padding:24px 16px 48px; }
+h1 { font-size:22px; margin:0 0 4px; }
+h2 { font-size:17px; margin:28px 0 10px; }
+.sub { color:var(--muted); margin:0 0 20px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; }
+.row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+button, .btn { font:inherit; border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 14px; cursor:pointer; color:var(--text); text-decoration:none; }
+button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+button.good { background:var(--ok); border-color:var(--ok); color:#fff; }
+button.bad { background:#fff; border-color:var(--err); color:var(--err); }
+table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { font-size:13px; color:var(--muted); font-weight:600; background:#fafbfc; }
+td.num { text-align:right; font-variant-numeric:tabular-nums; }
+a { color:var(--accent); }
+.badge { display:inline-block; padding:2px 9px; border-radius:999px; font-size:12px; font-weight:600; }
+.VALID, .APPROVED { background:var(--ok-bg); color:var(--ok); }
+.NEEDS_REVIEW { background:var(--warn-bg); color:var(--warn); }
+.REJECTED, .FAILED { background:var(--err-bg); color:var(--err); }
+.ERROR { color:var(--err); font-weight:600; }
+.WARNING, .REVIEW { color:var(--warn); font-weight:600; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
+@media (max-width:760px) { .grid { grid-template-columns:1fr; } }
+pre { background:#0f1720; color:#d7e0ea; padding:14px; border-radius:10px; overflow:auto; font-size:12.5px; max-height:520px; }
+.muted { color:var(--muted); }
+dl { display:grid; grid-template-columns:max-content 1fr; gap:4px 14px; margin:0; }
+dt { color:var(--muted); }
+dd { margin:0; }

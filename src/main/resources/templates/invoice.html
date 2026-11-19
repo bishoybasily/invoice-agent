@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invoice Detail</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+    <p><a href="/">← all invoices</a></p>
+    <h1 th:text="${doc.fileName}">file.pdf</h1>
+    <p class="sub">
+        <span class="badge" th:classappend="${doc.status}" th:text="${doc.status}">VALID</span>
+        <th:block th:if="${doc.result != null}">· read by <span th:text="${doc.result.extractor}">claude</span></th:block>
+        in <span th:text="${doc.durationMs}">0</span> ms
+    </p>
+
+    <div class="card row" th:if="${doc.status.name() == 'NEEDS_REVIEW' and doc.result.hasErrors()}">
+        <span>A validation rule failed, so this can't go to the customer's ERP as it is.</span>
+        <form method="post" th:action="@{/invoices/{id}/reject(id=${doc.id})}"><button class="bad">Reject (back to supplier)</button></form>
+    </div>
+    <div class="card row" th:if="${doc.status.name() == 'NEEDS_REVIEW' and !doc.result.hasErrors()}">
+        <span>All rules passed, but the AI was unsure how it read the document. Compare with the PDF:</span>
+        <form method="post" th:action="@{/invoices/{id}/approve(id=${doc.id})}"><button class="good">Approve &amp; generate XRechnung</button></form>
+        <form method="post" th:action="@{/invoices/{id}/reject(id=${doc.id})}"><button class="bad">Reject</button></form>
+    </div>
+    <div class="card" th:if="${doc.error != null}"><span class="ERROR">Failed:</span> <span th:text="${doc.error}"></span></div>
+
+    <div th:if="${doc.result != null}" th:with="findings=${doc.result.findings}, invoice=${doc.result.invoice}">
+    <h2>Validation</h2>
+    <table>
+        <thead><tr><th>Severity</th><th>Rule</th><th>Message</th></tr></thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(findings)}"><td colspan="3" class="VALID">All rules passed.</td></tr>
+        <tr th:each="f : ${findings}">
+            <td th:class="${f.severity}" th:text="${f.severity}">ERROR</td>
+            <td th:text="${f.code}">BR-CO-15</td>
+            <td th:text="${f.message}">message</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <h2>What the AI read</h2>
+        <div class="grid">
+            <div class="card">
+                <dl>
+                    <dt>Seller</dt><dd th:text="${invoice.seller.name + ', ' + invoice.seller.city}"></dd>
+                    <dt>Seller VAT ID</dt><dd th:text="${invoice.seller.vatId != '' ? invoice.seller.vatId : '—'}"></dd>
+                    <dt>Buyer</dt><dd th:text="${invoice.buyer.name + ', ' + invoice.buyer.city}"></dd>
+                    <dt>Invoice no.</dt><dd th:text="${invoice.invoiceNumber}"></dd>
+                    <dt>Date / due</dt><dd th:text="${invoice.invoiceDate + ' / ' + (invoice.dueDate != '' ? invoice.dueDate : '—')}"></dd>
+                    <dt>Net / VAT / total</dt><dd th:text="${invoice.netTotal + ' / ' + invoice.vatTotal + ' / ' + invoice.grossTotal + ' ' + invoice.currency}"></dd>
+                    <dt>Confidence</dt><dd th:text="${invoice.confidence}"></dd>
+                </dl>
+            </div>
+            <table>
+                <thead><tr><th>Line</th><th class="num">Qty</th><th class="num">Price</th><th class="num">VAT</th><th class="num">Net</th></tr></thead>
+                <tbody>
+                <tr th:each="l : ${invoice.lines}">
+                    <td th:text="${l.description}"></td>
+                    <td class="num" th:text="${l.quantity}"></td>
+                    <td class="num" th:text="${l.unitPrice}"></td>
+                    <td class="num" th:text="${l.vatRate + ' %'}"></td>
+                    <td class="num" th:text="${l.netAmount}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+
+    <div th:if="${doc.xrechnungXml != null}">
+        <h2>XRechnung (UBL) <a class="btn" th:href="@{/invoices/{id}/xrechnung.xml(id=${doc.id})}">Download</a></h2>
+        <pre th:text="${doc.xrechnungXml}"></pre>
+    </div>
+</main>
+</body>
+</html>

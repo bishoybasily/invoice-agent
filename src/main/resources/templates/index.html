@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invoice Agent</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+    <h1>Invoice Agent</h1>
+    <p class="sub">PDF in → AI reads it → plain Java rules decide → XRechnung out, or a human reviews it.
+        Read with <strong th:text="${extractor}">Claude</strong></p>
+
+    <div class="card row">
+        <form method="post" action="/upload" enctype="multipart/form-data" class="row">
+            <input type="file" name="files" accept="application/pdf" multiple required>
+            <button class="primary" type="submit">Upload &amp; process</button>
+        </form>
+    </div>
+
+    <h2>Invoices <span class="muted" th:if="${reviewCount > 0}" th:text="'(' + ${reviewCount} + ' waiting for review)'"></span></h2>
+    <table>
+        <thead>
+        <tr><th>#</th><th>File</th><th>Seller</th><th>Invoice no.</th><th class="num">Total</th><th>Status</th><th>Read by</th><th class="num">ms</th></tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(invoices)}"><td colspan="8" class="muted">Nothing yet. Upload a PDF, e.g. the ones in samples/.</td></tr>
+        <tr th:each="d : ${invoices}">
+            <td th:text="${d.id}">1</td>
+            <td><a th:href="@{/invoices/{id}(id=${d.id})}" th:text="${d.fileName}">file.pdf</a></td>
+            <td th:text="${d.sellerName}">Seller</td>
+            <td th:text="${d.invoiceNumber}">RE-1</td>
+            <td class="num" th:text="${d.grossTotal}">100.00 EUR</td>
+            <td><span class="badge" th:classappend="${d.status}" th:text="${d.status}">VALID</span></td>
+            <td class="muted" th:text="${d.result?.extractor}">Claude</td>
+            <td class="num" th:text="${d.durationMs}">0</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>
