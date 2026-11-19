@@ -10,7 +10,7 @@ description = "PDF invoice -> LLM extraction -> deterministic validation -> revi
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -24,7 +24,6 @@ repositories {
     mavenCentral()
 }
 
-extra["springAiVersion"] = "1.1.8"
 
 dependencies {
 
@@ -35,7 +34,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    implementation("org.springframework.ai:spring-ai-starter-model-anthropic")
+//    implementation("org.springframework.ai:spring-ai-starter-model-anthropic")
 
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
 
@@ -46,13 +45,15 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
 
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:mariadb")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testRuntimeOnly("com.h2database:h2")
 }
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.ai:spring-ai-bom:${property("springAiVersion")}")
+        mavenBom("org.springframework.ai:spring-ai-bom:1.1.8")
     }
 }
 

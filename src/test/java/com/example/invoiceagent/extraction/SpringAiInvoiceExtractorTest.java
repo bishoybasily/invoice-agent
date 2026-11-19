@@ -2,8 +2,10 @@ package com.example.invoiceagent.extraction;
 
 import com.example.invoiceagent.Samples;
 import com.example.invoiceagent.model.dto.ExtractedInvoice;
+import com.example.invoiceagent.ops.ai.UsageAdvisor;
 import com.example.invoiceagent.ops.extraction.SpringAiInvoiceExtractor;
 import org.junit.jupiter.api.Test;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
@@ -46,7 +48,7 @@ class SpringAiInvoiceExtractorTest {
         };
 
         byte[] pdf = Files.readAllBytes(Samples.file("01_clean_de_single_vat.pdf"));
-        ExtractedInvoice inv = new SpringAiInvoiceExtractor("Fake", fake).extract("01.pdf", pdf);
+        ExtractedInvoice inv = new SpringAiInvoiceExtractor(ChatClient.builder(fake).defaultAdvisors(new UsageAdvisor()).build(), fake).extract("01.pdf", pdf);
 
         assertThat(inv.invoiceNumber()).isEqualTo("RE-2026-1001");
         assertThat(inv.confidence()).isEqualTo(0.97);

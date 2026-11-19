@@ -14,24 +14,16 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
-  autoconfigure:
-    exclude:
-      - org.springframework.ai.model.anthropic.autoconfigure.AnthropicChatAutoConfiguration
-      - org.springframework.ai.model.google.genai.autoconfigure.chat.GoogleGenAiChatAutoConfiguration
-
   ai:
-    chat:
-      client:
-        enabled: false
     anthropic:
-#      api-key: ${ANTHROPIC_API_KEY:}
+      api-key: ${ANTHROPIC_API_KEY:}
       chat:
         options:
           model: claude-opus-5-5
           max-tokens: 16000
     google:
       genai:
-#        api-key: ${GOOGLE_API_KEY:}
+        api-key: ${GOOGLE_API_KEY:}
         project-id: ${GOOGLE_CLOUD_PROJECT:bishoybasily}
         location: ${GOOGLE_CLOUD_LOCATION:global}
         chat:
@@ -42,6 +34,4 @@ spring:
             response-mime-type: application/json
 
 ops:
-  extractor: ${OPS_EXTRACTOR:GEMINI}
-  samples-dir: ${OPS_SAMPLES_DIR:../invoice-agent-samples}
   min-confidence: 0.85

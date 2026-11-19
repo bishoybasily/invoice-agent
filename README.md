@@ -23,19 +23,12 @@ docker compose -f docker/compose/dependencies.yaml up -d
 
 Open http://localhost:8080 and upload PDF invoices.
 
-The model is chosen with `OPS_EXTRACTOR`:
+The model comes from whichever Spring AI starter is enabled in `build.gradle.kts`. Keep exactly one:
 
-| `OPS_EXTRACTOR` | Also set |
+| Starter | Also set |
 |---|---|
-| `claude` | `ANTHROPIC_API_KEY` |
-| `gemini` | `GOOGLE_API_KEY`, or `GOOGLE_CLOUD_PROJECT` with `gcloud auth application-default login` (Vertex AI) |
-| `replay` (default) | nothing; replays `ground_truth.json` from the samples directory without calling an AI |
-
-Example:
-
-```bash
-OPS_EXTRACTOR=claude ANTHROPIC_API_KEY=... ./gradlew bootRun
-```
+| `spring-ai-starter-model-google-genai` (default) | `GOOGLE_API_KEY`, or `GOOGLE_CLOUD_PROJECT` with `gcloud auth application-default login` (Vertex AI) |
+| `spring-ai-starter-model-anthropic` | `ANTHROPIC_API_KEY` |
 
 ## Test
 
@@ -43,5 +36,6 @@ OPS_EXTRACTOR=claude ANTHROPIC_API_KEY=... ./gradlew bootRun
 ./gradlew test
 ```
 
-The replay mode and the tests read the sample invoices from `../invoice-agent-samples`,
-or from `OPS_SAMPLES_DIR` if set.
+The database tests start MariaDB with Testcontainers, so Docker must be running. The tests read the
+sample invoices from `../invoice-agent-samples`, or from `OPS_SAMPLES_DIR` if set, and replay
+`ground_truth.json` instead of calling an AI.
